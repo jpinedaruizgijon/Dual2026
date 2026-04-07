@@ -4,7 +4,7 @@
 
     <div class="page-header">
         <h1>Catalogo de libros</h1>
-        <p class="subtitle">{{ $libros->total() }} libros en el sistema</p>
+        <p class="subtitle">{{ $libros->count() }} libros en el sistema</p>
     </div>
 
     <div class="filtros">
@@ -49,9 +49,6 @@
             @endforeach
         </div>
 
-        <div class="paginacion">
-            {{ $libros->links() }}
-        </div>
     @endif
 
 @endsection

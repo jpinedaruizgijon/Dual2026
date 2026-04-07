@@ -23,7 +23,7 @@ class LibroController extends Controller
             });
         }
 
-        $libros = $query->paginate(8)->withQueryString();
+        $libros = $query->get();
         return view('libros.index', compact('libros'));
     }
 

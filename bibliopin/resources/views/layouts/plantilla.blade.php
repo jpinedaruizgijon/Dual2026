@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('titulo', 'BiblioLaravel')</title>
+    <title>@yield('titulo', 'BiblioPin')</title>
     <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 </head>
 <body>
     <header class="header">
         <div class="header-inner">
-            <a href="{{ route('libros.index') }}" class="logo">BiblioLaravel</a>
+            <a href="{{ route('libros.index') }}" class="logo">BiblioPin</a>
             <nav class="nav">
                 <a href="{{ route('libros.index') }}"
                    class="nav-link {{ request()->routeIs('libros*') ? 'activo' : '' }}">
@@ -29,7 +29,7 @@
     </main>
 
     <footer class="footer">
-        <p>BiblioLaravel &copy; {{ date('Y') }} &mdash; Sistema de alquiler de libros</p>
+        <p>BiblioPin &copy; {{ date('Y') }} &mdash; Sistema de alquiler de libros</p>
     </footer>
 </body>
 </html>
