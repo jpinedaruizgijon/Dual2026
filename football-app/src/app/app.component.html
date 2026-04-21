@@ -1,0 +1,21 @@
+<!-- ============================================================
+     APP COMPONENT - Layout principal de la aplicación
+     Estructura: Header (navbar) + Contenido (router-outlet) + Footer
+     El router-outlet se reemplaza dinámicamente según la ruta activa
+     ============================================================ -->
+<div class="app-wrapper">
+
+  <!-- Cabecera con el menú de navegación -->
+  <app-header></app-header>
+
+  <!-- Zona de contenido principal: aquí se cargan los componentes según la ruta -->
+  <main class="main-content" role="main">
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Pie de página -->
+  <app-footer></app-footer>
+
+</div>

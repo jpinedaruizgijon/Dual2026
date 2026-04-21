@@ -1,0 +1,58 @@
+// =============================================
+// Variables personalizadas (sobreescriben Bootstrap)
+// =============================================
+$primary:       #1a6b3c;   // verde oscuro fútbol
+$secondary:     #f5a623;   // naranja/dorado
+$dark:          #0d1117;
+$light:         #f8f9fa;
+$font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+// =============================================
+// Importar Bootstrap (Sass fuente)
+// =============================================
+@import 'bootstrap/scss/bootstrap';
+
+// =============================================
+// Estilos globales
+// =============================================
+body {
+  background-color: #f0f2f5;
+}
+
+// Navbar personalizada
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+// Footer
+footer {
+  background-color: $dark;
+  color: #adb5bd;
+  padding: 1.5rem 0;
+  margin-top: auto;
+}
+
+// Tarjetas de partidos
+.match-card {
+  border-left: 4px solid $primary;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Layout principal
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+}

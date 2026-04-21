@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+
+    <!-- Logo y título de la aplicación -->
+    <a class="navbar-brand" routerLink="/">
+      ⚽ FutResult
+    </a>
+
+    <!-- Botón hamburguesa para pantallas pequeñas (móvil) -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarMenu"
+      aria-controls="navbarMenu"
+      aria-expanded="false"
+      aria-label="Abrir menú de navegación">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú de navegación colapsable -->
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+        <!-- Resultados-->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/resultados" routerLinkActive="active">
+            Resultados
+          </a>
+        </li>
+
+        <!-- Favoritos -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/favoritos" routerLinkActive="active">
+            Favoritos
+          </a>
+        </li>
+
+        <!-- Estadísticas -->
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/estadisticas" routerLinkActive="active">
+            Estadísticas
+          </a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
