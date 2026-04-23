@@ -3,11 +3,129 @@
 
     <!-- Cabecera de la sección -->
     <h2 class="mb-1">Resultados</h2>
-    <p class="text-muted mb-4">Consulta los últimos partidos y resultados en directo.</p>
+    <p class="text-muted mb-4">Consulta los últimos partidos y resultados de las principales ligas.</p>
 
-    <!-- Mientras se implementa la API -->
-    <div class="alert alert-info" role="alert">
-      <strong>En construcción:</strong> Próximamente se mostrarán los resultados de la API externa.
+    <!-- ===================================================
+         CONTROLES: selector de liga y buscador por equipo
+         =================================================== -->
+    <div class="row g-3 mb-4">
+
+      <!-- Selector de competición -->
+      <div class="col-md-5">
+        <label for="competicion" class="form-label fw-semibold">Liga / Competición</label>
+        <!-- Al cambiar la opción se recarga la lista de partidos -->
+        <select
+          id="competicion"
+          class="form-select"
+          [(ngModel)]="selectedCompetition"
+          (change)="cargarPartidos()">
+          <option *ngFor="let comp of competitions" [value]="comp.code">
+            {{ comp.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Buscador por nombre de equipo -->
+      <div class="col-md-5">
+        <label for="buscar" class="form-label fw-semibold">Buscar equipo</label>
+        <!-- Al escribir se filtra la lista en tiempo real con filtrar() -->
+        <input
+          id="buscar"
+          type="text"
+          class="form-control"
+          placeholder="Ej: Real Madrid, Barcelona..."
+          [(ngModel)]="searchText"
+          (input)="filtrar()"
+          aria-label="Buscar por nombre de equipo">
+      </div>
+
+      <!-- Botón para recargar manualmente -->
+      <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-primary w-100" (click)="cargarPartidos()">
+          Buscar
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ===================================================
+         SPINNER: se muestra mientras se carga la petición
+         =================================================== -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status" aria-label="Cargando partidos">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2 text-muted">Cargando partidos...</p>
+    </div>
+
+    <!-- ===================================================
+         ERROR: se muestra si la petición falla
+         =================================================== -->
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- ===================================================
+         SIN RESULTADOS: lista vacía tras filtrar
+         =================================================== -->
+    <div *ngIf="!loading && !errorMessage && filteredMatches.length === 0" class="alert alert-warning">
+      No se encontraron partidos con ese nombre de equipo.
+    </div>
+
+    <!-- ===================================================
+         LISTA DE PARTIDOS
+         Iteramos sobre filteredMatches con *ngFor
+         =================================================== -->
+    <div *ngIf="!loading && filteredMatches.length > 0">
+
+      <!-- Contador de resultados -->
+      <p class="text-muted mb-3">
+        Mostrando <strong>{{ filteredMatches.length }}</strong> partidos
+      </p>
+
+      <!-- Tarjeta por cada partido -->
+      <div class="card match-card mb-3" *ngFor="let match of filteredMatches">
+        <div class="card-body">
+          <div class="row align-items-center">
+
+            <!-- Equipo local -->
+            <div class="col-4 text-end">
+              <span class="fw-semibold">{{ match.homeTeam.name }}</span>
+            </div>
+
+            <!-- Marcador o estado -->
+            <div class="col-4 text-center">
+              <!-- Si el partido ha terminado o está en juego, mostramos el marcador -->
+              <span *ngIf="match.status === 'FINISHED' || match.status === 'IN_PLAY' || match.status === 'PAUSED'"
+                class="fs-5 fw-bold">
+                {{ match.score.fullTime.home }} - {{ match.score.fullTime.away }}
+              </span>
+              <!-- Si está programado mostramos la fecha -->
+              <span *ngIf="match.status === 'SCHEDULED'" class="text-muted small">
+                {{ match.utcDate | date:'dd/MM/yyyy HH:mm' }}
+              </span>
+              <!-- Badge con el estado del partido -->
+              <br>
+              <span class="badge mt-1" [ngClass]="getBadgeClass(match.status)">
+                {{ getStatusLabel(match.status) }}
+              </span>
+            </div>
+
+            <!-- Equipo visitante -->
+            <div class="col-4">
+              <span class="fw-semibold">{{ match.awayTeam.name }}</span>
+            </div>
+
+          </div>
+
+          <!-- Jornada / Matchday -->
+          <div class="text-center mt-2">
+            <small class="text-muted">Jornada {{ match.matchday }}</small>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
   </div>
