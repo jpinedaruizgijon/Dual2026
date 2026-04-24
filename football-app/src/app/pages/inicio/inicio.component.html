@@ -1,0 +1,47 @@
+<!-- ============================================================
+     PÁGINA DE INICIO
+     Hero principal + tarjetas de acceso a cada sección
+     ============================================================ -->
+
+<!-- Hero: sección de bienvenida con fondo de color primario -->
+<div class="hero text-white text-center py-5 mb-5">
+  <div class="container">
+    <div class="hero-icon mb-3">⚽</div>
+    <h1 class="display-4 fw-bold">Bienvenido a FutResult</h1>
+    <p class="lead mb-4">
+      Consulta resultados de fútbol en tiempo real, guarda tus equipos favoritos
+      y visualiza estadísticas de las principales ligas europeas.
+    </p>
+    <!-- Botón principal que lleva directamente a los resultados -->
+    <a routerLink="/resultados" class="btn btn-light btn-lg fw-semibold">
+      Ver resultados
+    </a>
+  </div>
+</div>
+
+<!-- Tarjetas de características: una por cada sección de la app -->
+<div class="container">
+  <div class="row g-4 justify-content-center">
+
+    <!-- *ngFor itera sobre el array features definido en el componente -->
+    <div class="col-md-4" *ngFor="let feature of features">
+      <div class="card feature-card h-100 text-center shadow-sm">
+        <div class="card-body d-flex flex-column">
+
+          <!-- Icono emoji de la característica -->
+          <div class="feature-icon mb-3">{{ feature.icono }}</div>
+
+          <h5 class="card-title">{{ feature.titulo }}</h5>
+          <p class="card-text text-muted flex-grow-1">{{ feature.descripcion }}</p>
+
+          <!-- routerLink navega a la ruta correspondiente sin recargar la página -->
+          <a [routerLink]="feature.ruta" class="btn btn-primary mt-3">
+            {{ feature.boton }}
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

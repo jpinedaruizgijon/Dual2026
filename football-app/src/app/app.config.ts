@@ -1,16 +1,19 @@
-// Importaciones de Angular necesarias para configurar la app
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-// provideHttpClient habilita el servicio HttpClient en toda la aplicación
-import { provideHttpClient } from '@angular/common/http';
+// withInterceptors permite registrar interceptores HTTP funcionales
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { routes } from './app.routes';
+// Interceptor que añade el token de la API de fútbol a las peticiones
+import { footballInterceptor } from './interceptors/football.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    // Registramos HttpClient como proveedor global para poder inyectarlo en los servicios
-    provideHttpClient()
+    // Registramos el interceptor junto con HttpClient
+    provideHttpClient(withInterceptors([footballInterceptor])),
+    provideCharts(withDefaultRegisterables())
   ]
 };

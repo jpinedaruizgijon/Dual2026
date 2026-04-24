@@ -1,0 +1,30 @@
+// Hero: fondo degradado verde oscuro → verde medio
+.hero {
+  background: linear-gradient(135deg, #0d3320 0%, #1a6b3c 100%);
+  border-radius: 0 0 2rem 2rem;
+
+  .hero-icon {
+    font-size: 4rem;
+    line-height: 1;
+  }
+
+  h1 {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Tarjetas de características
+.feature-card {
+  border: none;
+  border-radius: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+  }
+}

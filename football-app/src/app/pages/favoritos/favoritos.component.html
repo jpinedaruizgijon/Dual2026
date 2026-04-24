@@ -1,13 +1,164 @@
 <div class="row">
   <div class="col-12">
 
-    <!-- Cabecera de la sección -->
     <h2 class="mb-1">Favoritos</h2>
-    <p class="text-muted mb-4">Gestiona tus equipos y partidos favoritos.</p>
+    <p class="text-muted mb-4">Gestiona tus equipos favoritos.</p>
 
-    <!-- Mientras se implementa el CRUD -->
-    <div class="alert alert-info" role="alert">
-      <strong>En construcción:</strong> Próximamente podrás añadir, editar y eliminar favoritos.
+    <!-- Mensajes de éxito y error -->
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible" role="alert">
+      {{ successMessage }}
+      <button type="button" class="btn-close" (click)="successMessage = ''" aria-label="Cerrar"></button>
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible" role="alert">
+      {{ errorMessage }}
+      <button type="button" class="btn-close" (click)="errorMessage = ''" aria-label="Cerrar"></button>
+    </div>
+
+    <!-- ===================================================
+         FORMULARIO — Alta y edición de favoritos
+         ngModel enlaza cada campo con la propiedad formulario
+         =================================================== -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <!-- Título dinámico según si estamos creando o editando -->
+        <strong>{{ editando ? 'Editar favorito' : 'Añadir favorito' }}</strong>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="guardar()" #formularioRef="ngForm">
+          <div class="row g-3">
+
+            <!-- Campo: nombre del equipo (obligatorio) -->
+            <div class="col-md-6">
+              <label for="equipo" class="form-label">Equipo <span class="text-danger">*</span></label>
+              <input
+                id="equipo"
+                type="text"
+                class="form-control"
+                [(ngModel)]="formulario.equipo"
+                name="equipo"
+                required
+                placeholder="Ej: Real Madrid">
+            </div>
+
+            <!-- Campo: liga -->
+            <div class="col-md-6">
+              <label for="liga" class="form-label">Liga <span class="text-danger">*</span></label>
+              <input
+                id="liga"
+                type="text"
+                class="form-control"
+                [(ngModel)]="formulario.liga"
+                name="liga"
+                required
+                placeholder="Ej: LaLiga">
+            </div>
+
+            <!-- Campo: país -->
+            <div class="col-md-6">
+              <label for="pais" class="form-label">País <span class="text-danger">*</span></label>
+              <input
+                id="pais"
+                type="text"
+                class="form-control"
+                [(ngModel)]="formulario.pais"
+                name="pais"
+                required
+                placeholder="Ej: España">
+            </div>
+
+            <!-- Campo: nota personal -->
+            <div class="col-md-6">
+              <label for="nota" class="form-label">Nota</label>
+              <input
+                id="nota"
+                type="text"
+                class="form-control"
+                [(ngModel)]="formulario.nota"
+                name="nota"
+                placeholder="Ej: Mi equipo favorito">
+            </div>
+
+          </div>
+
+          <!-- Botones del formulario -->
+          <div class="mt-3 d-flex gap-2">
+            <!-- Deshabilitado si el formulario no es válido -->
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="formularioRef.invalid">
+              {{ editando ? 'Actualizar' : 'Añadir' }}
+            </button>
+            <!-- Cancelar solo se muestra cuando estamos editando -->
+            <button
+              *ngIf="editando"
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="cancelar()">
+              Cancelar
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         TABLA — Lista de favoritos con acciones editar/borrar
+         =================================================== -->
+
+    <!-- Spinner mientras carga la lista -->
+    <div *ngIf="loading" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status" aria-label="Cargando">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <!-- Lista vacía -->
+    <div *ngIf="!loading && favoritos.length === 0 && !errorMessage" class="alert alert-info">
+      No tienes favoritos guardados todavía. ¡Añade el primero!
+    </div>
+
+    <!-- Tabla de favoritos -->
+    <div *ngIf="!loading && favoritos.length > 0" class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Equipo</th>
+            <th scope="col">Liga</th>
+            <th scope="col">País</th>
+            <th scope="col">Nota</th>
+            <th scope="col" class="text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Una fila por cada favorito -->
+          <tr *ngFor="let fav of favoritos">
+            <td>{{ fav.id }}</td>
+            <td><strong>{{ fav.equipo }}</strong></td>
+            <td>{{ fav.liga }}</td>
+            <td>{{ fav.pais }}</td>
+            <td>{{ fav.nota || '—' }}</td>
+            <td class="text-center">
+              <!-- Botón editar: carga los datos en el formulario -->
+              <button
+                class="btn btn-sm btn-outline-primary me-2"
+                (click)="editar(fav)"
+                [attr.aria-label]="'Editar ' + fav.equipo">
+                Editar
+              </button>
+              <!-- Botón eliminar: pide confirmación antes de borrar -->
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="eliminar(fav.id!)"
+                [attr.aria-label]="'Eliminar ' + fav.equipo">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>

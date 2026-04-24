@@ -1,7 +1,7 @@
-// Importaciones de Angular
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';   // ngIf, ngFor, DatePipe, etc.
-import { FormsModule } from '@angular/forms';      // [(ngModel)] para el campo de búsqueda
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 
 // Servicio que hace las llamadas a la API de fútbol
 import { FootballService } from '../../services/football.service';
@@ -43,12 +43,10 @@ export class ResultadosComponent implements OnInit {
   // Mensaje de error si la petición falla
   errorMessage: string = '';
 
-  // Inyectamos el servicio de fútbol
-  constructor(private footballService: FootballService) {}
+  constructor(private footballService: FootballService, private title: Title) {}
 
-  // ngOnInit se ejecuta al cargar el componente
-  // Cargamos los partidos de la liga por defecto
   ngOnInit(): void {
+    this.title.setTitle('FutResult — Resultados');
     this.cargarPartidos();
   }
 

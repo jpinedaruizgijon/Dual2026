@@ -1,0 +1,12 @@
+// Cabecera de las tarjetas de gráficos
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #1a6b3c;
+  font-size: 0.95rem;
+}
+
+// Limitamos la altura del canvas del gráfico de tarta
+// para que no ocupe toda la columna en pantallas grandes
+canvas {
+  max-height: 320px;
+}

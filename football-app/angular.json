@@ -69,7 +69,8 @@
               "buildTarget": "football-app:build:production"
             },
             "development": {
-              "buildTarget": "football-app:build:development"
+              "buildTarget": "football-app:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

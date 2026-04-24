@@ -1,0 +1,6 @@
+// El enlace activo tiene un subrayado para indicar la página actual
+// (complementa la clase 'active' que añade routerLinkActive)
+.nav-link.active {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+  padding-bottom: 2px;
+}

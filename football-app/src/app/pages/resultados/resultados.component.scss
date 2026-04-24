@@ -1,0 +1,21 @@
+// Equipos en la tarjeta de partido
+.match-card .card-body {
+  padding: 1rem 1.25rem;
+}
+
+// Nombre del equipo local alineado a la derecha
+.team-home {
+  text-align: right;
+}
+
+// Nombre del equipo visitante alineado a la izquierda
+.team-away {
+  text-align: left;
+}
+
+// El marcador central destaca visualmente
+.score-box {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a6b3c;
+}

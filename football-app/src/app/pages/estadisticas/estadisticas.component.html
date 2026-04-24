@@ -1,14 +1,87 @@
-
 <div class="row">
   <div class="col-12">
 
-    <!-- Cabecera de la sección -->
     <h2 class="mb-1">Estadísticas</h2>
     <p class="text-muted mb-4">Visualiza estadísticas y gráficos de los resultados.</p>
 
-    <!-- Mientras se implementa la librería gráfica -->
-    <div class="alert alert-info" role="alert">
-      <strong>En construcción:</strong> Próximamente se mostrarán gráficos con los datos de la API.
+    <!-- ===================================================
+         SELECTOR DE COMPETICIÓN
+         =================================================== -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label for="competicion" class="form-label fw-semibold">Liga / Competición</label>
+        <select
+          id="competicion"
+          class="form-select"
+          [(ngModel)]="selectedCompetition"
+          (change)="cargarEstadisticas()">
+          <option *ngFor="let comp of competitions" [value]="comp.code">
+            {{ comp.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Spinner mientras carga -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status" aria-label="Cargando estadísticas">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2 text-muted">Calculando estadísticas...</p>
+    </div>
+
+    <!-- Error de API -->
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <!-- ===================================================
+         GRÁFICOS — solo se muestran cuando hay datos
+         canvas es el elemento que usa Chart.js para dibujar.
+         [data] y [options] enlazan con las propiedades del TS.
+         [type] indica el tipo de gráfico (bar, pie, line...).
+         =================================================== -->
+    <div *ngIf="!loading && !errorMessage" class="row g-4">
+
+      <!-- Gráfico de barras: goles por equipo -->
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <strong>Goles marcados por equipo (Top 10)</strong>
+          </div>
+          <div class="card-body">
+            <!-- baseChart es la directiva de ng2-charts que activa Chart.js -->
+            <canvas
+              baseChart
+              [data]="barChartData"
+              [options]="barChartOptions"
+              [type]="barChartType"
+              role="img"
+              aria-label="Gráfico de barras con goles por equipo">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de tarta: distribución de resultados -->
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <strong>Distribución de resultados</strong>
+          </div>
+          <div class="card-body d-flex justify-content-center">
+            <canvas
+              baseChart
+              [data]="pieChartData"
+              [options]="pieChartOptions"
+              [type]="pieChartType"
+              role="img"
+              aria-label="Gráfico de tarta con distribución de victorias y empates">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>

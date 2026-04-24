@@ -1,26 +1,26 @@
-// Importamos el tipo Routes de Angular Router
 import { Routes } from '@angular/router';
 
-// Importamos los componentes de cada página
+import { InicioComponent } from './pages/inicio/inicio.component';
 import { ResultadosComponent } from './pages/resultados/resultados.component';
 import { FavoritosComponent } from './pages/favoritos/favoritos.component';
 import { EstadisticasComponent } from './pages/estadisticas/estadisticas.component';
 
-// Definición de rutas de la aplicación
-// Cada objeto relaciona una URL con el componente que debe mostrarse
 export const routes: Routes = [
-  // Ruta raíz: redirige automáticamente a /resultados
-  { path: '', redirectTo: 'resultados', pathMatch: 'full' },
+  // Ruta raíz: carga la página de inicio/bienvenida
+  { path: '', redirectTo: 'inicio', pathMatch: 'full' },
 
-  // Página de resultados (consume la API externa de fútbol)
+  // Página de bienvenida con accesos directos a cada sección
+  { path: 'inicio', component: InicioComponent },
+
+  // Página de resultados (API externa de fútbol)
   { path: 'resultados', component: ResultadosComponent },
 
   // Página de favoritos (CRUD con la API propia)
   { path: 'favoritos', component: FavoritosComponent },
 
-  // Página de estadísticas (gráficos con librería gráfica)
+  // Página de estadísticas (gráficos con Chart.js)
   { path: 'estadisticas', component: EstadisticasComponent },
 
-  // Ruta comodín: cualquier URL no reconocida redirige a resultados
-  { path: '**', redirectTo: 'resultados' }
+  // Ruta comodín: cualquier URL no reconocida va al inicio
+  { path: '**', redirectTo: 'inicio' }
 ];

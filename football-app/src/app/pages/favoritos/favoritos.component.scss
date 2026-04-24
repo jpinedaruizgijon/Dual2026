@@ -1,0 +1,18 @@
+// Cabecera del formulario con color primario ya definido en Bootstrap/Sass global
+// Solo añadimos el radio del borde superior
+.card-header {
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+// Fila de la tabla al pasar el ratón — resaltado suave
+.table tbody tr:hover {
+  background-color: rgba(26, 107, 60, 0.06);
+}
+
+// Botones de acción más compactos en pantallas pequeñas
+@media (max-width: 576px) {
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
