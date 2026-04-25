@@ -1,17 +1,13 @@
-// ============================================================
-// ENTORNO DE DESARROLLO
-// Este fichero contiene variables que cambian entre desarrollo
-// y producción. Angular sustituye este fichero por
-// environment.prod.ts al compilar con --configuration=production
-// ============================================================
 export const environment = {
   production: false,
 
-  // URL base de la API externa de fútbol (football-data.org)
-  footballApiUrl: 'https://api.football-data.org/v4',
+  // En desarrollo usamos /api-football para que el proxy de Angular
+  // reenvíe la petición a football-data.org evitando el bloqueo CORS.
+  // En producción se usará la URL directa (environment.prod.ts)
+  footballApiUrl: '/api-football',
 
-  // API Key de football-data.org
-  // Regístrate gratis en: https://www.football-data.org/client/register
-  // y sustituye este valor por tu token personal
-  footballApiKey: 'TU_API_KEY_AQUI'
+  footballApiKey: 'b8d30d3396f3400e8eaf7322ed505016',
+
+  // URL base de la API propia (backend Laravel)
+  apiUrl: 'http://localhost:8000/api'
 };
