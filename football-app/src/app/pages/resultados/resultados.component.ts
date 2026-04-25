@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
-// Servicio que hace las llamadas a la API de fútbol
 import { FootballService } from '../../services/football.service';
 
 @Component({
@@ -15,7 +14,6 @@ import { FootballService } from '../../services/football.service';
 })
 export class ResultadosComponent implements OnInit {
 
-  // Lista de competiciones disponibles en el selector
   competitions = [
     { code: 'PD',  name: 'LaLiga (España)' },
     { code: 'PL',  name: 'Premier League (Inglaterra)' },
@@ -25,23 +23,46 @@ export class ResultadosComponent implements OnInit {
     { code: 'CL',  name: 'Champions League' }
   ];
 
-  // Competición seleccionada por el usuario (por defecto LaLiga)
   selectedCompetition: string = 'PD';
 
-  // Lista de partidos que devuelve la API
+  // Todos los partidos descargados de la API (ya ordenados)
   matches: any[] = [];
 
-  // Copia filtrada de los partidos (para el buscador por equipo)
+  // Copia filtrada por el buscador (sobre la que se pagina)
   filteredMatches: any[] = [];
 
-  // Texto que escribe el usuario en el buscador
-  searchText: string = '';
+  searchText:    string  = '';
+  loading:       boolean = false;
+  errorMessage:  string  = '';
 
-  // Indica si la petición está en curso (para mostrar el spinner)
-  loading: boolean = false;
+  // -------------------------------------------------------
+  // PAGINACIÓN
+  // -------------------------------------------------------
+  paginaActual:      number = 1;
+  partidosPorPagina: number = 10;
 
-  // Mensaje de error si la petición falla
-  errorMessage: string = '';
+  // Número total de páginas calculado sobre los partidos filtrados
+  get totalPaginas(): number {
+    return Math.ceil(this.filteredMatches.length / this.partidosPorPagina);
+  }
+
+  // Array de números de página para el *ngFor del paginador [1, 2, 3 ...]
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  // Partidos que se muestran en la página actual (slice del array filtrado)
+  get partidosPagina(): any[] {
+    const inicio = (this.paginaActual - 1) * this.partidosPorPagina;
+    const fin    = inicio + this.partidosPorPagina;
+    return this.filteredMatches.slice(inicio, fin);
+  }
+
+  // Índice del último partido visible en la página actual
+  // Se usa en el texto "Mostrando X – Y de Z"
+  get ultimoVisible(): number {
+    return Math.min(this.paginaActual * this.partidosPorPagina, this.filteredMatches.length);
+  }
 
   constructor(private footballService: FootballService, private title: Title) {}
 
@@ -50,24 +71,24 @@ export class ResultadosComponent implements OnInit {
     this.cargarPartidos();
   }
 
-  // -------------------------------------------------------
-  // Llama al servicio para obtener los partidos de la liga
-  // seleccionada y los guarda en el array matches
-  // -------------------------------------------------------
   cargarPartidos(): void {
     this.loading = true;
     this.errorMessage = '';
     this.matches = [];
     this.filteredMatches = [];
+    this.paginaActual = 1;
 
     this.footballService.getMatchesByCompetition(this.selectedCompetition).subscribe({
-      // Si la petición tiene éxito, guardamos los partidos
       next: (data) => {
-        this.matches = data.matches || [];
+        // Ordenamos por jornada descendente y por fecha descendente dentro de la misma jornada
+        // así la última jornada jugada aparece siempre la primera
+        this.matches = (data.matches || []).sort((a: any, b: any) => {
+          if (b.matchday !== a.matchday) return b.matchday - a.matchday;
+          return new Date(b.utcDate).getTime() - new Date(a.utcDate).getTime();
+        });
         this.filteredMatches = this.matches;
         this.loading = false;
       },
-      // Si hay error (red, API key inválida, etc.) lo mostramos al usuario
       error: (err) => {
         this.errorMessage = 'No se pudieron cargar los partidos. Comprueba tu API Key.';
         this.loading = false;
@@ -76,30 +97,28 @@ export class ResultadosComponent implements OnInit {
     });
   }
 
-  // -------------------------------------------------------
-  // Filtra los partidos en tiempo real según el texto
-  // que escribe el usuario en el buscador
-  // Se llama con (input) en la plantilla
-  // -------------------------------------------------------
   filtrar(): void {
     const texto = this.searchText.toLowerCase().trim();
+    // Al filtrar volvemos siempre a la primera página
+    this.paginaActual = 1;
 
-    if (!texto) {
-      // Si el campo está vacío, mostramos todos
-      this.filteredMatches = this.matches;
-    } else {
-      // Filtramos por nombre del equipo local o visitante
-      this.filteredMatches = this.matches.filter(match =>
-        match.homeTeam.name.toLowerCase().includes(texto) ||
-        match.awayTeam.name.toLowerCase().includes(texto)
-      );
+    this.filteredMatches = texto
+      ? this.matches.filter(match =>
+          match.homeTeam.name.toLowerCase().includes(texto) ||
+          match.awayTeam.name.toLowerCase().includes(texto)
+        )
+      : this.matches;
+  }
+
+  // Navega a una página concreta
+  irAPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaActual = pagina;
+      // Scrolleamos al principio de la lista para no perder la referencia visual
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
-  // -------------------------------------------------------
-  // Devuelve la clase CSS de Bootstrap según el estado del partido
-  // FINISHED = gris, IN_PLAY = verde, SCHEDULED = azul
-  // -------------------------------------------------------
   getBadgeClass(status: string): string {
     switch (status) {
       case 'FINISHED':  return 'bg-secondary';
@@ -110,9 +129,6 @@ export class ResultadosComponent implements OnInit {
     }
   }
 
-  // -------------------------------------------------------
-  // Traduce el estado del partido al español
-  // -------------------------------------------------------
   getStatusLabel(status: string): string {
     switch (status) {
       case 'FINISHED':  return 'Finalizado';

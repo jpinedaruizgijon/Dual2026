@@ -15,58 +15,80 @@
     </div>
 
     <!-- ===================================================
-         FORMULARIO — Alta y edición de favoritos
-         ngModel enlaza cada campo con la propiedad formulario
+         FORMULARIO
          =================================================== -->
     <div class="card mb-4">
       <div class="card-header bg-primary text-white">
-        <!-- Título dinámico según si estamos creando o editando -->
         <strong>{{ editando ? 'Editar favorito' : 'Añadir favorito' }}</strong>
       </div>
       <div class="card-body">
         <form (ngSubmit)="guardar()" #formularioRef="ngForm">
           <div class="row g-3">
 
-            <!-- Campo: nombre del equipo (obligatorio) -->
+            <!-- SELECT de liga — carga los equipos al cambiar -->
+            <div class="col-md-6">
+              <label for="liga" class="form-label">Liga <span class="text-danger">*</span></label>
+              <select
+                id="liga"
+                class="form-select"
+                [(ngModel)]="selectedLigaCode"
+                name="liga"
+                required
+                (change)="onLigaChange()">
+                <option value="">— Selecciona una liga —</option>
+                <option *ngFor="let comp of competitions" [value]="comp.code">
+                  {{ comp.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- SELECT de equipo — se llena con los equipos reales de la API -->
             <div class="col-md-6">
               <label for="equipo" class="form-label">Equipo <span class="text-danger">*</span></label>
-              <input
+
+              <!-- Spinner pequeño mientras carga los equipos de la API -->
+              <div *ngIf="loadingEquipos" class="d-flex align-items-center gap-2 mt-1">
+                <div class="spinner-border spinner-border-sm text-primary" role="status" aria-label="Cargando equipos">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+                <small class="text-muted">Cargando equipos...</small>
+              </div>
+
+              <!-- El select solo aparece cuando los equipos ya están cargados -->
+              <select
+                *ngIf="!loadingEquipos"
                 id="equipo"
-                type="text"
-                class="form-control"
+                class="form-select"
                 [(ngModel)]="formulario.equipo"
                 name="equipo"
                 required
-                placeholder="Ej: Real Madrid">
+                [disabled]="equipos.length === 0"
+                (change)="onEquipoChange()">
+                <option value="">
+                  {{ equipos.length === 0 ? '— Selecciona primero una liga —' : '— Selecciona un equipo —' }}
+                </option>
+                <!-- Iteramos sobre los equipos devueltos por la API -->
+                <option *ngFor="let team of equipos" [value]="team.name">
+                  {{ team.name }}
+                </option>
+              </select>
             </div>
 
-            <!-- Campo: liga -->
+            <!-- País — se rellena automáticamente al elegir el equipo -->
             <div class="col-md-6">
-              <label for="liga" class="form-label">Liga <span class="text-danger">*</span></label>
-              <input
-                id="liga"
-                type="text"
-                class="form-control"
-                [(ngModel)]="formulario.liga"
-                name="liga"
-                required
-                placeholder="Ej: LaLiga">
-            </div>
-
-            <!-- Campo: país -->
-            <div class="col-md-6">
-              <label for="pais" class="form-label">País <span class="text-danger">*</span></label>
+              <label for="pais" class="form-label">País</label>
+              <!-- readonly: el usuario no puede editarlo manualmente -->
               <input
                 id="pais"
                 type="text"
                 class="form-control"
                 [(ngModel)]="formulario.pais"
                 name="pais"
-                required
-                placeholder="Ej: España">
+                readonly
+                placeholder="Se rellena automáticamente">
             </div>
 
-            <!-- Campo: nota personal -->
+            <!-- Nota personal — texto libre opcional -->
             <div class="col-md-6">
               <label for="nota" class="form-label">Nota</label>
               <input
@@ -80,16 +102,14 @@
 
           </div>
 
-          <!-- Botones del formulario -->
+          <!-- Botones -->
           <div class="mt-3 d-flex gap-2">
-            <!-- Deshabilitado si el formulario no es válido -->
             <button
               type="submit"
               class="btn btn-primary"
-              [disabled]="formularioRef.invalid">
+              [disabled]="formularioRef.invalid || !formulario.equipo">
               {{ editando ? 'Actualizar' : 'Añadir' }}
             </button>
-            <!-- Cancelar solo se muestra cuando estamos editando -->
             <button
               *ngIf="editando"
               type="button"
@@ -104,22 +124,18 @@
     </div>
 
     <!-- ===================================================
-         TABLA — Lista de favoritos con acciones editar/borrar
+         TABLA DE FAVORITOS
          =================================================== -->
-
-    <!-- Spinner mientras carga la lista -->
     <div *ngIf="loading" class="text-center py-4">
       <div class="spinner-border text-primary" role="status" aria-label="Cargando">
         <span class="visually-hidden">Cargando...</span>
       </div>
     </div>
 
-    <!-- Lista vacía -->
     <div *ngIf="!loading && favoritos.length === 0 && !errorMessage" class="alert alert-info">
       No tienes favoritos guardados todavía. ¡Añade el primero!
     </div>
 
-    <!-- Tabla de favoritos -->
     <div *ngIf="!loading && favoritos.length > 0" class="table-responsive">
       <table class="table table-hover align-middle">
         <thead class="table-dark">
@@ -133,7 +149,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Una fila por cada favorito -->
           <tr *ngFor="let fav of favoritos">
             <td>{{ fav.id }}</td>
             <td><strong>{{ fav.equipo }}</strong></td>
@@ -141,14 +156,12 @@
             <td>{{ fav.pais }}</td>
             <td>{{ fav.nota || '—' }}</td>
             <td class="text-center">
-              <!-- Botón editar: carga los datos en el formulario -->
               <button
                 class="btn btn-sm btn-outline-primary me-2"
                 (click)="editar(fav)"
                 [attr.aria-label]="'Editar ' + fav.equipo">
                 Editar
               </button>
-              <!-- Botón eliminar: pide confirmación antes de borrar -->
               <button
                 class="btn btn-sm btn-outline-danger"
                 (click)="eliminar(fav.id!)"
