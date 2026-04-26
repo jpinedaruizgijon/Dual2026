@@ -1,0 +1,12 @@
+Options -MultiViews
+RewriteEngine On
+
+# Subdirectorio donde está desplegada la app en Ruix
+RewriteBase /jpineda/futresult/
+
+# Si el fichero o directorio existe físicamente, lo sirve directamente
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Cualquier otra ruta la redirige a index.html para que Angular gestione la navegación
+RewriteRule ^ index.html [L]

@@ -9,8 +9,10 @@
   <app-header></app-header>
 
   <!-- Zona de contenido principal: aquí se cargan los componentes según la ruta -->
-  <main class="main-content" role="main">
+  <!-- id="contenido-principal" es el destino del enlace "Saltar al contenido" del index.html -->
+  <main class="main-content" id="contenido-principal" role="main" tabindex="-1">
     <div class="container">
+      <app-breadcrumb></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
   </main>

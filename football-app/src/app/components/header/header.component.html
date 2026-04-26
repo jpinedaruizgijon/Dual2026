@@ -24,28 +24,44 @@
 
         <!-- Inicio -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/inicio" routerLinkActive="active">
+          <a class="nav-link"
+             routerLink="/inicio"
+             routerLinkActive="active"
+             #rlInicio="routerLinkActive"
+             [attr.aria-current]="rlInicio.isActive ? 'page' : null">
             Inicio
           </a>
         </li>
 
         <!-- Resultados -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/resultados" routerLinkActive="active">
+          <a class="nav-link"
+             routerLink="/resultados"
+             routerLinkActive="active"
+             #rlResultados="routerLinkActive"
+             [attr.aria-current]="rlResultados.isActive ? 'page' : null">
             Resultados
           </a>
         </li>
 
         <!-- Favoritos -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/favoritos" routerLinkActive="active">
+          <a class="nav-link"
+             routerLink="/favoritos"
+             routerLinkActive="active"
+             #rlFavoritos="routerLinkActive"
+             [attr.aria-current]="rlFavoritos.isActive ? 'page' : null">
             Favoritos
           </a>
         </li>
 
         <!-- Estadísticas -->
         <li class="nav-item">
-          <a class="nav-link" routerLink="/estadisticas" routerLinkActive="active">
+          <a class="nav-link"
+             routerLink="/estadisticas"
+             routerLinkActive="active"
+             #rlEstadisticas="routerLinkActive"
+             [attr.aria-current]="rlEstadisticas.isActive ? 'page' : null">
             Estadísticas
           </a>
         </li>

@@ -12,7 +12,8 @@ return [
     // En desarrollo Angular corre en el puerto 4200, por eso lo incluimos.
     'allowed_origins' => [
         'http://localhost:4200',
-        'https://tudominio.ruix.es',    // cambiar por la URL real en producción
+        'https://ruix.iesruizgijon.es/jpineda/futresult',
+        'https://ruix.iesruizgijon.es',
     ],
 
     'allowed_origins_patterns' => [],

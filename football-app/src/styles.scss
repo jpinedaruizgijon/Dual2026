@@ -2,8 +2,9 @@
 // Variables propias para reutilizar en este fichero
 // (independientes de Bootstrap)
 // =============================================
-$color-primary: #1a6b3c;   // verde oscuro fútbol
-$color-dark:    #0d1117;
+$color-primary:   #1a6b3c;   // verde oscuro fútbol
+$color-secondary: #f5a623;   // naranja/dorado
+$color-dark:      #0d1117;
 
 // =============================================
 // Importar Bootstrap pasándole nuestras variables
@@ -61,4 +62,35 @@ footer {
 .main-content {
   flex: 1;
   padding: 2rem 0;
+}
+
+// =============================================
+// Accesibilidad: foco visible para teclado
+// :focus-visible solo se activa al navegar con Tab, no con el ratón
+// =============================================
+:focus-visible {
+  outline: 3px solid $color-secondary;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+// =============================================
+// Enlace "Saltar al contenido" (skip-link)
+// Oculto por defecto; aparece al recibir el foco con Tab
+// =============================================
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  padding: 0.5rem 1.25rem;
+  background: $color-primary;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+
+  &:focus {
+    top: 0;
+  }
 }

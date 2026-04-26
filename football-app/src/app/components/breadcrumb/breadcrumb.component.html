@@ -1,0 +1,18 @@
+<!-- Migas de pan: solo se muestran cuando hay más de una miga (fuera de Inicio) -->
+<nav *ngIf="migas.length > 0" aria-label="Ruta de navegación" class="mb-3">
+  <ol class="breadcrumb">
+    <li
+      *ngFor="let miga of migas; let ultimo = last"
+      class="breadcrumb-item"
+      [class.active]="ultimo"
+      [attr.aria-current]="ultimo ? 'page' : null">
+
+      <!-- Si no es el último enlace, mostramos un enlace clicable -->
+      <a *ngIf="!ultimo" [routerLink]="miga.url">{{ miga.label }}</a>
+
+      <!-- El último elemento es la página actual: solo texto, sin enlace -->
+      <span *ngIf="ultimo">{{ miga.label }}</span>
+
+    </li>
+  </ol>
+</nav>
