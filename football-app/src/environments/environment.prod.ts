@@ -12,5 +12,5 @@ export const environment = {
 
   // URL del backend Laravel desplegado en Ruix
   // IMPORTANTE: actualizar con la ruta real donde esté el backend
-  apiUrl: 'https://ruix.iesruizgijon.es/jpineda/futresult/futresult-api/public/api'
+  apiUrl: 'https://ruix.iesruizgijon.es/jpineda/futresult/futresult-api/public/index.php/api'
 };
