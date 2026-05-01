@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-// Title service de Angular: permite cambiar el título de la pestaña del navegador
 import { Title } from '@angular/platform-browser';
+import { forkJoin } from 'rxjs';
+
+import { CountriesService } from '../../services/countries.service';
 
 @Component({
   selector: 'app-inicio',
@@ -13,12 +15,6 @@ import { Title } from '@angular/platform-browser';
 })
 export class InicioComponent implements OnInit {
 
-  constructor(private title: Title) {}
-
-  ngOnInit(): void {
-    this.title.setTitle('FutResult — Inicio');
-  }
-  // Las tarjetas de características que se muestran en la página de inicio
   features = [
     {
       icono: '🏆',
@@ -42,4 +38,45 @@ export class InicioComponent implements OnInit {
       boton: 'Ver estadísticas'
     }
   ];
+
+  // Países de las cinco grandes ligas — info cargada desde REST Countries
+  paises: any[] = [];
+  loadingPaises = true;
+
+  private readonly LIGAS = [
+    { pais: 'Spain',          liga: 'LaLiga' },
+    { pais: 'England',        liga: 'Premier League' },
+    { pais: 'Germany',        liga: 'Bundesliga' },
+    { pais: 'Italy',          liga: 'Serie A' },
+    { pais: 'France',         liga: 'Ligue 1' },
+  ];
+
+  constructor(private title: Title, private countriesService: CountriesService) {}
+
+  ngOnInit(): void {
+    this.title.setTitle('FutResult — Inicio');
+    this.cargarPaises();
+  }
+
+  private cargarPaises(): void {
+    const peticiones = this.LIGAS.map(l =>
+      this.countriesService.getCountryInfo(l.pais)
+    );
+
+    forkJoin(peticiones).subscribe({
+      next: (resultados) => {
+        this.paises = resultados
+          .map((data, i) => data ? { ...data, liga: this.LIGAS[i].liga } : null)
+          .filter(p => p !== null);
+        this.loadingPaises = false;
+      },
+      error: () => { this.loadingPaises = false; }
+    });
+  }
+
+  formatPoblacion(n: number): string {
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000)     return (n / 1_000).toFixed(0) + 'K';
+    return String(n);
+  }
 }

@@ -1,12 +1,16 @@
 Options -MultiViews
 RewriteEngine On
-
-# Subdirectorio donde está desplegada la app en Ruix
 RewriteBase /jpineda/futresult/
 
-# Si el fichero o directorio existe físicamente, lo sirve directamente
+# --- API favoritos (lista) ---
+RewriteRule ^futresult-api/public/index\.php/api/favoritos/?$ futresult-api/public/favoritos.php [L,QSA]
+
+# --- API favoritos (con id) ---
+RewriteRule ^futresult-api/public/index\.php/api/favoritos/([0-9]+)/?$ futresult-api/public/favoritos.php?id=$1 [L,QSA]
+
+# --- Archivos y directorios reales pasan directamente ---
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Cualquier otra ruta la redirige a index.html para que Angular gestione la navegación
+# --- Todo lo demás va a Angular ---
 RewriteRule ^ index.html [L]

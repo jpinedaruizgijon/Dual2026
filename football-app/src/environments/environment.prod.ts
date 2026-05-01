@@ -5,10 +5,10 @@
 export const environment = {
   production: true,
 
-  // En producción llamamos directamente a la API de football-data.org (sin proxy)
-  footballApiUrl: 'https://api.football-data.org/v4',
+  // En producción el proxy PHP reenvía las peticiones a football-data.org
+  footballApiUrl: 'https://ruix.iesruizgijon.es/jpineda/futresult/futresult-api/public/football.php?path=',
 
-  footballApiKey: 'b8d30d3396f3400e8eaf7322ed505016',
+  footballApiKey: '',
 
   // URL del backend Laravel desplegado en Ruix
   // IMPORTANTE: actualizar con la ruta real donde esté el backend

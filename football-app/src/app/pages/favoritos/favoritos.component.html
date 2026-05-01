@@ -75,14 +75,22 @@
             <div class="col-md-6">
               <label for="pais" class="form-label">País</label>
               <!-- readonly: el usuario no puede editarlo manualmente -->
-              <input
-                id="pais"
-                type="text"
-                class="form-control"
-                [(ngModel)]="formulario.pais"
-                name="pais"
-                readonly
-                placeholder="Se rellena automáticamente">
+              <div class="d-flex align-items-center gap-2">
+                <img
+                  *ngIf="formularioBandera"
+                  [src]="formularioBandera"
+                  [alt]="'Bandera de ' + formulario.pais"
+                  width="32" height="21"
+                  style="border:1px solid #dee2e6; border-radius:2px; object-fit:cover">
+                <input
+                  id="pais"
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="formulario.pais"
+                  name="pais"
+                  readonly
+                  placeholder="Se rellena automáticamente">
+              </div>
             </div>
 
             <!-- Nota personal — texto libre opcional -->
@@ -150,7 +158,17 @@
             <td>{{ fav.id }}</td>
             <td><strong>{{ fav.equipo }}</strong></td>
             <td>{{ fav.liga }}</td>
-            <td>{{ fav.pais }}</td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <img
+                  *ngIf="banderasMap[fav.pais]"
+                  [src]="banderasMap[fav.pais]"
+                  [alt]="'Bandera de ' + fav.pais"
+                  width="24" height="16"
+                  style="border:1px solid #dee2e6; border-radius:2px; object-fit:cover">
+                {{ fav.pais }}
+              </div>
+            </td>
             <td>{{ fav.nota || '—' }}</td>
             <td class="text-center">
               <button
