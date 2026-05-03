@@ -2,15 +2,9 @@ Options -MultiViews
 RewriteEngine On
 RewriteBase /jpineda/futresult/
 
-# --- API favoritos (lista) ---
 RewriteRule ^futresult-api/public/index\.php/api/favoritos/?$ futresult-api/public/favoritos.php [L,QSA]
-
-# --- API favoritos (con id) ---
 RewriteRule ^futresult-api/public/index\.php/api/favoritos/([0-9]+)/?$ futresult-api/public/favoritos.php?id=$1 [L,QSA]
 
-# --- Archivos y directorios reales pasan directamente ---
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# --- Todo lo demás va a Angular ---
 RewriteRule ^ index.html [L]

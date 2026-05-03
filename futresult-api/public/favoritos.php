@@ -13,9 +13,18 @@ try {
     $pdo = new PDO('sqlite:' . __DIR__ . '/../database/database.sqlite');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->exec('CREATE TABLE IF NOT EXISTS favoritos (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        equipo     TEXT NOT NULL,
+        liga       TEXT NOT NULL,
+        pais       TEXT NOT NULL,
+        nota       TEXT,
+        created_at TEXT,
+        updated_at TEXT
+    )');
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => 'Error de base de datos']);
+    echo json_encode(['error' => $e->getMessage()]);
     exit;
 }
 

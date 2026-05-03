@@ -10,27 +10,27 @@ import { environment } from '../../environments/environment';
 })
 export class FavoritosService {
 
-  private apiUrl = `${environment.apiUrl}/favoritos`;
+  private readonly url = environment.favoritosUrl;
 
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Favorito[]> {
-    return this.http.get<Favorito[]>(this.apiUrl);
+    return this.http.get<Favorito[]>(this.url);
   }
 
   getById(id: number): Observable<Favorito> {
-    return this.http.get<Favorito>(`${this.apiUrl}/${id}`);
+    return this.http.get<Favorito>(`${this.url}?id=${id}`);
   }
 
   create(favorito: Favorito): Observable<Favorito> {
-    return this.http.post<Favorito>(this.apiUrl, favorito);
+    return this.http.post<Favorito>(this.url, favorito);
   }
 
   update(id: number, favorito: Favorito): Observable<Favorito> {
-    return this.http.put<Favorito>(`${this.apiUrl}/${id}`, favorito);
+    return this.http.put<Favorito>(`${this.url}?id=${id}`, favorito);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.url}?id=${id}`);
   }
 }
