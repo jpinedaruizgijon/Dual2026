@@ -3,12 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 
-// ng2-charts: directiva que renderiza el canvas del gráfico
 import { BaseChartDirective } from 'ng2-charts';
-// Chart.js: tipos para configurar los gráficos
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
-// Servicio de la API externa de fútbol
 import { FootballService } from '../../services/football.service';
 
 @Component({
@@ -20,7 +17,6 @@ import { FootballService } from '../../services/football.service';
 })
 export class EstadisticasComponent implements OnInit {
 
-  // Competición seleccionada (mismas opciones que en Resultados)
   competitions = [
     { code: 'PD',  name: 'LaLiga' },
     { code: 'PL',  name: 'Premier League' },
@@ -33,10 +29,6 @@ export class EstadisticasComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
 
-  // -------------------------------------------------------
-  // GRÁFICO DE BARRAS — Goles marcados por los equipos locales
-  // ChartData contiene las etiquetas (equipos) y los datasets (datos)
-  // -------------------------------------------------------
   barChartType: ChartType = 'bar';
 
   barChartData: ChartData<'bar'> = {
@@ -45,21 +37,20 @@ export class EstadisticasComponent implements OnInit {
       {
         label: 'Goles como local',
         data: [],
-        backgroundColor: 'rgba(26, 107, 60, 0.7)',   // verde primario con opacidad
+        backgroundColor: 'rgba(26, 107, 60, 0.7)',
         borderColor: '#1a6b3c',
         borderWidth: 1
       },
       {
         label: 'Goles como visitante',
         data: [],
-        backgroundColor: 'rgba(245, 166, 35, 0.7)',  // naranja secundario con opacidad
+        backgroundColor: 'rgba(245, 166, 35, 0.7)',
         borderColor: '#f5a623',
         borderWidth: 1
       }
     ]
   };
 
-  // Opciones del gráfico de barras
   barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
@@ -77,10 +68,6 @@ export class EstadisticasComponent implements OnInit {
     }
   };
 
-  // -------------------------------------------------------
-  // GRÁFICO DE TARTA — Distribución de resultados
-  // (victorias locales / empates / victorias visitante)
-  // -------------------------------------------------------
   pieChartType: ChartType = 'pie';
 
   pieChartData: ChartData<'pie'> = {
@@ -110,10 +97,6 @@ export class EstadisticasComponent implements OnInit {
     this.cargarEstadisticas();
   }
 
-  // -------------------------------------------------------
-  // Obtiene los partidos finalizados y calcula los datos
-  // para ambos gráficos a partir de la respuesta de la API
-  // -------------------------------------------------------
   cargarEstadisticas(): void {
     this.loading = true;
     this.errorMessage = '';
@@ -132,17 +115,11 @@ export class EstadisticasComponent implements OnInit {
     });
   }
 
-  // -------------------------------------------------------
-  // Procesa el array de partidos y construye los datos
-  // para el gráfico de barras y el de tarta
-  // -------------------------------------------------------
   private procesarDatosGraficos(partidos: any[]): void {
-    // --- Gráfico de tarta: contamos victorias, empates y derrotas ---
-    let victoriasLocal    = 0;
-    let empates           = 0;
+    let victoriasLocal     = 0;
+    let empates            = 0;
     let victoriasVisitante = 0;
 
-    // Mapa para acumular goles por equipo { nombreEquipo: { local: N, visitante: N } }
     const golesMap: { [equipo: string]: { local: number; visitante: number } } = {};
 
     partidos.forEach(match => {
@@ -151,36 +128,31 @@ export class EstadisticasComponent implements OnInit {
       const local          = match.homeTeam?.name;
       const visitante      = match.awayTeam?.name;
 
-      // Acumulamos goles del equipo local
       if (local) {
         if (!golesMap[local]) golesMap[local] = { local: 0, visitante: 0 };
         golesMap[local].local += golesLocal;
       }
 
-      // Acumulamos goles del equipo visitante
       if (visitante) {
         if (!golesMap[visitante]) golesMap[visitante] = { local: 0, visitante: 0 };
         golesMap[visitante].visitante += golesVisitante;
       }
 
-      // Contamos resultado del partido para la tarta
       if (golesLocal > golesVisitante)       victoriasLocal++;
       else if (golesLocal === golesVisitante) empates++;
       else                                   victoriasVisitante++;
     });
 
-    // Actualizamos la tarta
     this.pieChartData = {
       ...this.pieChartData,
       datasets: [{ ...this.pieChartData.datasets[0], data: [victoriasLocal, empates, victoriasVisitante] }]
     };
 
-    // Tomamos los 10 equipos con más goles en casa para no saturar el gráfico
+    // Top 10 por goles en casa para no saturar el eje X
     const equipos = Object.keys(golesMap)
       .sort((a, b) => golesMap[b].local - golesMap[a].local)
       .slice(0, 10);
 
-    // Actualizamos el gráfico de barras con las etiquetas y los datos
     this.barChartData = {
       labels: equipos,
       datasets: [

@@ -1,7 +1,4 @@
 <?php
-// Proxy directo a football-data.org — no depende del enrutador de Laravel
-// Angular llama a este archivo con ?path=competitions/PD/matches&status=FINISHED
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Headers: Content-Type');

@@ -3,12 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-// ============================================================
-// COUNTRIES SERVICE
-// Consume la API pública restcountries.com desde el navegador.
-// No requiere API key y tiene CORS habilitado.
-// Se usa para obtener la bandera del país de cada equipo favorito.
-// ============================================================
 @Injectable({
   providedIn: 'root'
 })
@@ -18,14 +12,13 @@ export class CountriesService {
 
   constructor(private http: HttpClient) {}
 
-  // Algunos países de la API de fútbol usan nombres distintos a restcountries
+  // "England" no existe en REST Countries — se mapea a "United Kingdom"
   private readonly ALIAS: Record<string, string> = {
     'England':  'United Kingdom',
     'Scotland': 'United Kingdom',
     'Wales':    'United Kingdom',
   };
 
-  // Devuelve la URL de la bandera SVG del país o '' si no se encuentra
   getFlagUrl(countryName: string): Observable<string> {
     const nombre = this.ALIAS[countryName] ?? countryName;
     const url = `${this.API}/name/${encodeURIComponent(nombre)}?fields=name,flags`;
@@ -35,7 +28,6 @@ export class CountriesService {
     );
   }
 
-  // Devuelve información completa del país: bandera, capital, población y región
   getCountryInfo(countryName: string): Observable<any> {
     const nombre = this.ALIAS[countryName] ?? countryName;
     const url = `${this.API}/name/${encodeURIComponent(nombre)}?fields=name,flags,capital,population,region`;

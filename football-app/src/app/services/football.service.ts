@@ -3,12 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-// ============================================================
-// FOOTBALL SERVICE
-// En producción llama al proxy PHP (football.php) alojado en
-// el mismo servidor, que reenvía la petición a football-data.org.
-// En desarrollo llama directamente a la API con el proxy de Angular.
-// ============================================================
 @Injectable({
   providedIn: 'root'
 })

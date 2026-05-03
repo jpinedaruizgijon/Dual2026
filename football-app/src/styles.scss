@@ -1,16 +1,7 @@
-// =============================================
-// Variables propias para reutilizar en este fichero
-// (independientes de Bootstrap)
-// =============================================
-$color-primary:   #1a6b3c;   // verde oscuro fútbol
-$color-secondary: #f5a623;   // naranja/dorado
+$color-primary:   #1a6b3c;
+$color-secondary: #f5a623;
 $color-dark:      #0d1117;
 
-// =============================================
-// Importar Bootstrap pasándole nuestras variables
-// con la sintaxis @use ... with (...) de Dart Sass
-// Así Bootstrap usa nuestros colores en lugar de los suyos
-// =============================================
 @use 'bootstrap/scss/bootstrap' with (
   $primary:          #1a6b3c,
   $secondary:        #f5a623,
@@ -19,21 +10,16 @@ $color-dark:      #0d1117;
   $font-family-base: 'Segoe UI' Tahoma Geneva Verdana sans-serif
 );
 
-// =============================================
-// Estilos globales
-// =============================================
 body {
   background-color: #f0f2f5;
 }
 
-// Navbar
 .navbar-brand {
   font-weight: 700;
   font-size: 1.4rem;
   letter-spacing: 1px;
 }
 
-// Footer
 footer {
   background-color: $color-dark;
   color: #adb5bd;
@@ -41,7 +27,6 @@ footer {
   margin-top: auto;
 }
 
-// Tarjetas de partidos con borde izquierdo de color primario
 .match-card {
   border-left: 4px solid $color-primary;
   transition: transform 0.2s;
@@ -52,7 +37,6 @@ footer {
   }
 }
 
-// Layout principal para que el footer quede siempre abajo
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -64,20 +48,13 @@ footer {
   padding: 2rem 0;
 }
 
-// =============================================
-// Accesibilidad: foco visible para teclado
 // :focus-visible solo se activa al navegar con Tab, no con el ratón
-// =============================================
 :focus-visible {
   outline: 3px solid $color-secondary;
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-// =============================================
-// Enlace "Saltar al contenido" (skip-link)
-// Oculto por defecto; aparece al recibir el foco con Tab
-// =============================================
 .skip-link {
   position: absolute;
   top: -100%;
