@@ -4,12 +4,12 @@
   border-radius: 0.5rem 0.5rem 0 0 !important;
 }
 
-// Fila de la tabla al pasar el ratón — resaltado suave
+// Fila de la tabla al pasar el ratón 
 .table tbody tr:hover {
   background-color: rgba(26, 107, 60, 0.06);
 }
 
-// Botones de acción más compactos en pantallas pequeñas
+// Botones de acción en pantallas pequeñas
 @media (max-width: 576px) {
   .btn-sm {
     font-size: 0.75rem;

@@ -10,6 +10,11 @@ $color-dark:      #0d1117;
   $font-family-base: 'Segoe UI' Tahoma Geneva Verdana sans-serif
 );
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   background-color: #f0f2f5;
 }
